@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 추첨기</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
+            min-height: 100vh;
+        }
+        .lotto-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        .number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            background: linear-gradient(145deg, #ffd700, #ffa500);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        .number:hover {
+            transform: scale(1.1);
+        }
+        .btn-generate {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+        .title {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="lotto-container text-center">
+            <h1 class="title mb-4">✨ 로또 번호 추첨기 ✨</h1>
+            <div class="numbers d-flex justify-content-center gap-3 mb-4" id="numbers"></div>
+            <button class="btn-generate" onclick="generateNumbers()">번호 추첨하기</button>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        function generateNumbers() {
+            const numbers = new Set();
+            while(numbers.size < 6) {
+                numbers.add(Math.floor(Math.random() * 45) + 1);
+            }
+            
+            const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
+            const numbersDiv = document.getElementById('numbers');
+            numbersDiv.innerHTML = '';
+            
+            // 애니메이션 효과를 위한 딜레이 설정
+            sortedNumbers.forEach((num, index) => {
+                setTimeout(() => {
+                    const numberDiv = document.createElement('div');
+                    numberDiv.className = 'number';
+                    numberDiv.textContent = num;
+                    numbersDiv.appendChild(numberDiv);
+                    
+                    // 마지막 번호가 나왔을 때 축하 메시지 표시
+                    if (index === sortedNumbers.length - 1) {
+                        Swal.fire({
+                            title: '번호가 생성되었습니다!',
+                            text: '행운을 빕니다! 🍀',
+                            icon: 'success',
+                            confirmButtonText: '확인',
+                            confirmButtonColor: '#4CAF50',
+                            background: 'rgba(255, 255, 255, 0.9)',
+                            backdrop: 'rgba(0,0,0,0.4)'
+                        });
+                    }
+                }, index * 200); // 각 번호마다 0.2초 딜레이
+            });
+        }
+
+        // 페이지 로드 시 초기 번호 생성
+        window.onload = () => {
+            Swal.fire({
+                title: '로또 번호 추첨기',
+                text: '행운의 번호를 뽑아보세요!',
+                icon: 'info',
+                confirmButtonText: '시작하기',
+                confirmButtonColor: '#4CAF50',
+                background: 'rgba(255, 255, 255, 0.9)',
+                backdrop: 'rgba(0,0,0,0.4)'
+            }).then(() => {
+                generateNumbers();
+            });
+        };
+    </script>
+</body>
+</html>
